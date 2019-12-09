@@ -60,6 +60,7 @@ public class ManageReservationsForm extends javax.swing.JFrame {
         jTextFieldClientID = new javax.swing.JTextField();
         jDateChooserDateIN = new com.toedter.calendar.JDateChooser();
         jDateChooserDateOUT = new com.toedter.calendar.JDateChooser();
+        Next1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -185,6 +186,13 @@ public class ManageReservationsForm extends javax.swing.JFrame {
     jTextFieldClientID.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
     jTextFieldClientID.setToolTipText("");
 
+    Next1.setText("Next");
+    Next1.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            Next1ActionPerformed(evt);
+        }
+    });
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -222,12 +230,18 @@ public class ManageReservationsForm extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
                 .addComponent(jButton_Refresh_JTable_Data, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGap(161, 161, 161))
+        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(Next1)
+            .addGap(126, 126, 126))
     );
     jPanel1Layout.setVerticalGroup(
         jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel1Layout.createSequentialGroup()
             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(43, 43, 43)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(Next1)
+            .addGap(14, 14, 14)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -280,26 +294,26 @@ public class ManageReservationsForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            
-            //dapat memilih baris index
-            int rIndex = jTable1.getSelectedRow();
-            
-            //menampilkan data
-            jTextFieldReservationID.setText(model.getValueAt(rIndex, 0).toString());
-            jTextFieldClientID.setText(model.getValueAt(rIndex, 1).toString());
-            jTextFieldRoomNumber.setText(model.getValueAt(rIndex, 2).toString());
-            
-            //menampilkan dateIn dan dateOut from jtable to jdatechooser
-            try {
-                
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+        //dapat memilih baris index
+        int rIndex = jTable1.getSelectedRow();
+
+        //menampilkan data
+        jTextFieldReservationID.setText(model.getValueAt(rIndex, 0).toString());
+        jTextFieldClientID.setText(model.getValueAt(rIndex, 1).toString());
+        jTextFieldRoomNumber.setText(model.getValueAt(rIndex, 2).toString());
+
+        //menampilkan dateIn dan dateOut from jtable to jdatechooser
+        try {
+
             Date dateIn = new SimpleDateFormat("yyyy-MM-dd").parse(model.getValueAt(rIndex, 3).toString());
             jDateChooserDateIN.setDate(dateIn);
-            
+
             Date dateOut = new SimpleDateFormat("yyyy-MM-dd").parse(model.getValueAt(rIndex, 4).toString());
             jDateChooserDateOUT.setDate(dateOut);
-            
+
         } catch (ParseException ex) {
             Logger.getLogger(ManageReservationsForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -331,41 +345,32 @@ public class ManageReservationsForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonAddReservationActionPerformed
 
     private void jButtonEditReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditReservationActionPerformed
-        
+
         //edit the selected reservation
-        
         //mendapatkan data dari fields
-        
-        
         try {
-                int reservationId = Integer.valueOf(jTextFieldReservationID.getText());
-                int roomNumber = Integer.valueOf(jTextFieldRoomNumber.getText());
-                int clientId = Integer.valueOf(jTextFieldClientID.getText());
-                
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String date_in = dateFormat.format(jDateChooserDateIN.getDate());
-                String date_out = dateFormat.format(jDateChooserDateOUT.getDate());
+            int reservationId = Integer.valueOf(jTextFieldReservationID.getText());
+            int roomNumber = Integer.valueOf(jTextFieldRoomNumber.getText());
+            int clientId = Integer.valueOf(jTextFieldClientID.getText());
 
-                
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String date_in = dateFormat.format(jDateChooserDateIN.getDate());
+            String date_out = dateFormat.format(jDateChooserDateOUT.getDate());
 
-                if (reservation.editReservation(reservationId, clientId, roomNumber, date_in, date_out)) 
-                    {
-                        JOptionPane.showMessageDialog(rootPane, "Reservation Information Updated Successfully", "Edit Reservation", JOptionPane.INFORMATION_MESSAGE);
-                    } 
-                else{
+            if (reservation.editReservation(reservationId, clientId, roomNumber, date_in, date_out)) {
+                JOptionPane.showMessageDialog(rootPane, "Reservation Information Updated Successfully", "Edit Reservation", JOptionPane.INFORMATION_MESSAGE);
+            } else {
 
-                     JOptionPane.showMessageDialog(rootPane, "Reservation Information Not Updated", "Edit Reservation Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                    
-
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(rootPane, ex.getMessage() + " - Enter The Room Number + The Client ID + Reservation ID", "Data Error", JOptionPane.ERROR_MESSAGE);
-            } catch (NullPointerException ex) {
-                JOptionPane.showMessageDialog(rootPane, ex.getMessage() + " - Select The Date IN and OUT", "Data Error", JOptionPane.ERROR_MESSAGE);
-
+                JOptionPane.showMessageDialog(rootPane, "Reservation Information Not Updated", "Edit Reservation Error", JOptionPane.ERROR_MESSAGE);
             }
 
-        
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage() + " - Enter The Room Number + The Client ID + Reservation ID", "Data Error", JOptionPane.ERROR_MESSAGE);
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage() + " - Select The Date IN and OUT", "Data Error", JOptionPane.ERROR_MESSAGE);
+
+        }
+
 
     }//GEN-LAST:event_jButtonEditReservationActionPerformed
 
@@ -382,7 +387,7 @@ public class ManageReservationsForm extends javax.swing.JFrame {
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage() + " - Enter The Reservation ID", "Reservation ID Error", JOptionPane.ERROR_MESSAGE);
-        } 
+        }
 
     }//GEN-LAST:event_jButtonRemoveReservationActionPerformed
 
@@ -392,9 +397,8 @@ public class ManageReservationsForm extends javax.swing.JFrame {
         jTextFieldReservationID.setText("");
         jTextFieldClientID.setText("");
         jTextFieldRoomNumber.setText("");
-        
-        //mengahpus date dari jdateChooser
 
+        //mengahpus date dari jdateChooser
         jDateChooserDateIN.setDate(null);
         jDateChooserDateOUT.setDate(null);
 
@@ -407,6 +411,12 @@ public class ManageReservationsForm extends javax.swing.JFrame {
         //mengisi jTable
         reservation.fillReservationJTable(jTable1);
     }//GEN-LAST:event_jButton_Refresh_JTable_DataActionPerformed
+
+    private void Next1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Next1ActionPerformed
+        // TODO add your handling code here:
+        UIPenjualan ui = new UIPenjualan();
+        ui.setVisible(true);
+    }//GEN-LAST:event_Next1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -444,6 +454,7 @@ public class ManageReservationsForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Next1;
     private javax.swing.JButton jButtonAddReservation;
     private javax.swing.JButton jButtonClearFields;
     private javax.swing.JButton jButtonEditReservation;
